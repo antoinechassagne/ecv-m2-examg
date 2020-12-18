@@ -1,6 +1,6 @@
 import { useContext } from 'react';
 import { ApplicationContext } from '../../domain/application.store';
-import { LikePictureById } from '../../domain/picture/picture.actions';
+import { LikePictureById, unlikePictureById } from '../../domain/picture/picture.actions';
 import { LikeButton, BookmarkButton } from '../buttons';
 import './Card.css';
 
@@ -9,7 +9,11 @@ export function Card({ picture }) {
     const { state, dispatch } = useContext(ApplicationContext);
 
     const onLike = (pictureId) => {
-        LikePictureById(dispatch, pictureId)
+        if (picture.likedBy && picture.likedBy.find(like => like === state.user._id)) {
+            unlikePictureById(dispatch, pictureId);
+        } else {
+            LikePictureById(dispatch, pictureId)
+        }
     }
 
     if (!state.user) return null
