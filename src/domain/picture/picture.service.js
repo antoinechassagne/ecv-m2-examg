@@ -50,3 +50,21 @@ export function unlikePicture(pictureID) {
         })
         .then(res => res.json());
 }
+
+export function commentPicture(pictureID, comment) {
+    return fetch(`/api/pictures/comment/${pictureID}`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ comment })
+    })
+        .then(async res => {
+            if (res.status !== 200 && res.status !== 201) {
+                const { message } = await res.json()
+                throw new Error(message)
+            }
+            return res
+        })
+        .then(res => res.json());
+}

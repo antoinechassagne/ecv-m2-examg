@@ -18,7 +18,7 @@ export default function reducer(state, action) {
             }
         case types.PICTURE_LIKED:
             currentImageIndex = pictures.findIndex(picture => picture._id === action.payload._id);
-            pictures[currentImageIndex].likedBy = [...pictures[currentImageIndex].likedBy, user._id];
+            pictures[currentImageIndex].likedBy = [...pictures[currentImageIndex].likedBy, { _id: user._id }];
             return {
                 ...state,
                 pending: false,
@@ -26,10 +26,18 @@ export default function reducer(state, action) {
             }
         case types.PICTURE_UNLIKED:
             currentImageIndex = pictures.findIndex(picture => picture._id === action.payload._id);
-            const userIndex = pictures[currentImageIndex].likedBy.indexOf(user._id);
+            const userIndex = pictures[currentImageIndex].likedBy.findIndex(like => like._id === user._id);
             if (userIndex > -1) {
                 pictures[currentImageIndex].likedBy.splice(userIndex, 1);
             }
+            return {
+                ...state,
+                pending: false,
+                pictures: [...pictures]
+            }
+        case types.PICTURE_COMMENTED:
+            currentImageIndex = pictures.findIndex(picture => picture._id === action.payload._id);
+            pictures[currentImageIndex].comments = action.payload.comments;
             return {
                 ...state,
                 pending: false,
